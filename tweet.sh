@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#message="wake up, wake up, wake up it's the 1st of the month -- http://www.youtube.com/watch?v=4j_cOsgRY7w"
-
 #  tweet.sh
 #     __
 #    <- )
@@ -11,6 +9,7 @@
 
 
 set -o errexit
+DEBUG="off"
 
 status="$*"
 consumer_key=""
@@ -52,15 +51,17 @@ echo "[+] Building header"
 header="Authorization: OAuth oauth_consumer_key=\"${consumer_key}\", oauth_nonce=\"${nonce}\", oauth_signature=\"${oauth_signature}\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"${timestamp}\", oauth_token=\"${oauth_token}\", oauth_version=\"1.0\""
 
 echo "[+] Posting request"
-result=$(curl -sS --request 'POST' 'https://api.twitter.com/1.1/statuses/update.json' --data "status=${encoded_status}" --header "${header}")
+response=$(curl -sS --request 'POST' 'https://api.twitter.com/1.1/statuses/update.json' --data "status=${encoded_status}" --header "${header}")
 
-if [ $(echo "${result}" | grep "errors" | wc -l) -gt 0 ]; then
-    echo "[ERROR] Unsuccess: ${result}"
+if [ $(echo "${response}" | grep "errors" | wc -l) -gt 0 ]; then
+    echo "[ERROR] Unsuccess: ${response}"
 else
     echo "[+] Success!"
 fi
 
 #debug
-echo "${signature_base_string}"
-echo ${header}
-echo ${result}
+if [ "$DEBUG" == "on" ]; then
+    echo "[DEBUG] signature: ${signature_base_string}"
+    echo "[DEBUG] header: ${header}"
+    echo "[DEBUG] response: ${response}"
+fi
