@@ -20,7 +20,7 @@ oauth_secret=""
 timestamp=$(date +%s)
 nonce=$(date +%s%T | openssl base64 | sed -e s'/[+=/]//g')
 
-# inspired by http://ethertubes.com/bash-snippet-url-encoding/
+# hack inspired by http://ethertubes.com/bash-snippet-url-encoding/
 urlencode () {
         i="$@"
         i=${i//%/%25}  ; i=${i//' '/%20} ; i=${i//\~/%7E} ; i=${i//!/%21}  ; i=${i//\"/%22}  ; i=${i//#/%23}
